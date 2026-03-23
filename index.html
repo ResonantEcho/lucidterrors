@@ -48,33 +48,31 @@
   /* ── HERO ── */
   #hero {
     position: relative;
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
     padding-bottom: 80px;
-    padding-top: 72vh;
     overflow: hidden;
   }
 
   .hero-bg {
     position: absolute; inset: 0;
-    background: url('lt-graphic.png') center top / cover no-repeat;
+    background: url('main.png') center center / cover no-repeat;
     filter: brightness(0.88);
-    transform: scale(1.03);
     animation: heroFloat 12s ease-in-out infinite alternate;
   }
 
   @keyframes heroFloat {
-    from { transform: scale(1.03) translateY(0); }
-    to   { transform: scale(1.06) translateY(-12px); }
+    from { transform: translateY(0); }
+    to   { transform: translateY(-12px); }
   }
 
   .hero-fade-bottom {
     position: absolute; bottom: 0; left: 0; right: 0;
     height: 35%;
-    background: linear-gradient(to top, var(--dark) 0%, transparent 100%);
+    background: linear-gradient(to top, rgba(6,8,15,0.6) 0%, transparent 100%);
     pointer-events: none;
   }
   .hero-fade-top {
@@ -85,14 +83,19 @@
   }
 
   .hero-content {
-    position: relative; z-index: 2;
+    position: absolute;
+    bottom: 80px;
+    left: 0;
+    right: 0;
+    z-index: 2;
     text-align: center;
     display: flex; flex-direction: column; align-items: center; gap: 28px;
+    padding: 0 24px;
     animation: fadeUp 1.2s ease both;
   }
 
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(30px); }
+    from { opacity: 0; transform: translateY(20px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
@@ -149,7 +152,7 @@
     display: flex; flex-direction: column; align-items: center; gap: 6px;
     opacity: 0.5;
     animation: bobDown 2.5s ease-in-out infinite;
-    z-index: 2;
+    z-index: 3;
   }
   .scroll-hint span {
     font-family: 'Cinzel', serif; font-size: 0.6rem;
@@ -452,16 +455,66 @@
 
   /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
-    .genre-grid { grid-template-columns: 1fr; }
-    .about-layout { grid-template-columns: 1fr; }
-    .author-portrait { max-width: 220px; margin: 0 auto; }
+
+    /* Hero — on mobile show the image as a tall block, content stacked below */
+    #hero {
+      height: auto;
+      min-height: 0;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding-bottom: 0;
+    }
+
+    .hero-bg {
+      position: relative;
+      inset: auto;
+      width: 100%;
+      height: 56vw; /* maintain image aspect ratio on narrow screens */
+      min-height: 220px;
+      background-position: center top;
+      background-size: cover;
+      animation: none;
+    }
+
+    .hero-fade-top,
+    .hero-fade-bottom { display: none; }
+
+    .hero-content {
+      position: relative;
+      bottom: auto; left: auto; right: auto;
+      padding: 32px 24px 40px;
+      background: var(--mid);
+      width: 100%;
+      gap: 20px;
+    }
+
+    .hero-tagline { font-size: 0.72rem; }
+
+    .hero-subtitle { font-size: 1rem; }
+
+    .scroll-hint { display: none; }
+
+    /* Sections */
+    section { padding: 64px 20px; }
+
+    .section-title { font-size: clamp(1.3rem, 6vw, 1.8rem); }
+
+    .genre-grid { grid-template-columns: 1fr; gap: 16px; }
+
+    .about-layout { grid-template-columns: 1fr; gap: 36px; }
+    .author-portrait { max-width: 180px; margin: 0 auto; }
+
     .signup-form { flex-direction: column; }
     .signup-form input[type="email"],
     .signup-form button { width: 100%; }
+
+    .btn-primary { padding: 14px 32px; font-size: 0.72rem; }
   }
 
-  @media (max-width: 600px) {
-    .genre-grid { grid-template-columns: 1fr; gap: 16px; }
+  @media (max-width: 480px) {
+    .genre-card { padding: 32px 24px; }
+    .story-card { padding: 28px 22px; }
+    .section-title { font-size: 1.3rem; }
   }
 </style>
 </head>
