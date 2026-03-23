@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucid Terrors — An Anthology</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --teal:    #00d4c8;
+    --teal-dim: #007a75;
+    --violet:  #8b5cf6;
+    --crimson: #c0392b;
+    --ice:     #cef4f3;
+    --dark:    #06080f;
+    --mid:     #0d1220;
+    --card-bg: rgba(13, 18, 32, 0.85);
+    --border:  rgba(0, 212, 200, 0.2);
+    --text:    #b8c8d8;
+    --text-bright: #ddeef4;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.7;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999; opacity: 0.35;
+  }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 80px;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: url('lt-graphic.png') center top / cover no-repeat;
+    filter: brightness(0.88);
+    transform: scale(1.03);
+    animation: heroFloat 12s ease-in-out infinite alternate;
+  }
+
+  @keyframes heroFloat {
+    from { transform: scale(1.03) translateY(0); }
+    to   { transform: scale(1.06) translateY(-12px); }
+  }
+
+  .hero-fade-bottom {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 45%;
+    background: linear-gradient(to top, var(--dark) 0%, transparent 100%);
+    pointer-events: none;
+  }
+  .hero-fade-top {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 20%;
+    background: linear-gradient(to bottom, var(--dark) 0%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 28px;
+    animation: fadeUp 1.2s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-tagline {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--teal);
+    opacity: 0.85;
+  }
+
+  .hero-subtitle {
+    font-family: 'Crimson Pro', serif;
+    font-size: clamp(1rem, 2.2vw, 1.3rem);
+    font-style: italic;
+    color: var(--text-bright);
+    max-width: 520px;
+    opacity: 0.9;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 14px 44px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ice);
+    background: transparent;
+    border: 1px solid var(--teal);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.3s;
+    cursor: pointer;
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--teal);
+    transform: translateX(-101%);
+    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+    z-index: -1;
+  }
+
+  .btn-primary:hover { color: var(--dark); }
+  .btn-primary:hover::before { transform: translateX(0); }
+
+  /* ── SCROLL INDICATOR ── */
+  .scroll-hint {
+    position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    opacity: 0.5;
+    animation: bobDown 2.5s ease-in-out infinite;
+    z-index: 2;
+  }
+  .scroll-hint span {
+    font-family: 'Cinzel', serif; font-size: 0.6rem;
+    letter-spacing: 0.3em; text-transform: uppercase; color: var(--teal);
+  }
+  .scroll-hint svg { width: 20px; height: 20px; stroke: var(--teal); }
+  @keyframes bobDown {
+    0%,100% { transform: translateX(-50%) translateY(0); }
+    50%      { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* ── SECTION DEFAULTS ── */
+  section { padding: 100px 24px; }
+
+  .section-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 16px;
+    opacity: 0.8;
+  }
+
+  .section-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    color: var(--text-bright);
+    line-height: 1.2;
+    margin-bottom: 24px;
+  }
+
+  /* ── DIVIDER ── */
+  .rune-divider {
+    display: flex; align-items: center; gap: 16px;
+    margin: 0 auto 60px;
+    max-width: 400px;
+    justify-content: center;
+  }
+  .rune-divider::before, .rune-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--teal-dim));
+  }
+  .rune-divider::after {
+    background: linear-gradient(to left, transparent, var(--teal-dim));
+  }
+  .rune-divider span {
+    color: var(--teal);
+    font-size: 1.1rem;
+    opacity: 0.6;
+  }
+
+  /* ── GENRES ── */
+  #genres { background: linear-gradient(to bottom, var(--dark), var(--mid)); }
+
+  .genre-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 56px;
+  }
+
+  .genre-card {
+    padding: 48px 36px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: default;
+  }
+
+  .genre-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--teal), transparent);
+    transform: scaleX(0);
+    transition: transform 0.4s;
+  }
+
+  .genre-card:hover { border-color: rgba(0,212,200,0.45); transform: translateY(-4px); }
+  .genre-card:hover::before { transform: scaleX(1); }
+
+  .genre-icon {
+    font-size: 2.4rem;
+    margin-bottom: 20px;
+    display: block;
+    filter: drop-shadow(0 0 8px var(--teal));
+  }
+
+  .genre-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 12px;
+  }
+
+  .genre-desc {
+    font-size: 1rem;
+    color: var(--text);
+    line-height: 1.65;
+  }
+
+  /* ── STORIES ── */
+  #teaser { background: var(--mid); }
+
+  .stories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 28px;
+    margin-top: 56px;
+  }
+
+  .story-card {
+    background: linear-gradient(135deg, rgba(0,212,200,0.04), rgba(139,92,246,0.06));
+    border: 1px solid var(--border);
+    padding: 36px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .story-card::after {
+    content: '';
+    position: absolute; bottom: 0; right: 0;
+    width: 80px; height: 80px;
+    background: radial-gradient(circle at bottom right, rgba(0,212,200,0.08), transparent 70%);
+  }
+
+  .story-card:hover {
+    border-color: rgba(139,92,246,0.4);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 20px rgba(139,92,246,0.08);
+  }
+
+  .story-tag {
+    display: inline-block;
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border: 1px solid rgba(139,92,246,0.4);
+    color: var(--violet);
+    margin-bottom: 20px;
+  }
+
+  .story-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.05rem;
+    color: var(--text-bright);
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+
+  .story-excerpt {
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.7;
+    border-left: 2px solid var(--teal-dim);
+    padding-left: 16px;
+  }
+
+  /* ── ABOUT ── */
+  #about {
+    background: linear-gradient(to bottom, var(--mid), var(--dark));
+  }
+
+  .about-layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 64px;
+    align-items: center;
+    margin-top: 56px;
+  }
+
+  .author-portrait-wrap {
+    position: relative;
+  }
+
+  .author-portrait {
+    width: 100%;
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, rgba(0,212,200,0.1), rgba(139,92,246,0.15));
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .author-portrait::before {
+    content: '';
+    position: absolute; inset: -2px;
+    background: linear-gradient(135deg, var(--teal), var(--violet), var(--teal));
+    z-index: -1;
+    animation: borderSpin 6s linear infinite;
+  }
+
+  @keyframes borderSpin {
+    from { filter: hue-rotate(0deg); }
+    to   { filter: hue-rotate(360deg); }
+  }
+
+  .author-bio p { margin-bottom: 16px; }
+
+  .author-bio p:first-of-type {
+    font-size: 1.15rem;
+    color: var(--text-bright);
+  }
+
+  /* ── SIGNUP ── */
+  #signup {
+    background: var(--dark);
+    text-align: center;
+  }
+
+  .signup-wrap {
+    max-width: 560px;
+    margin: 0 auto;
+    padding-top: 20px;
+  }
+
+  .signup-form {
+    display: flex;
+    gap: 0;
+    margin-top: 40px;
+    border: 1px solid var(--teal-dim);
+  }
+
+  .signup-form input[type="email"] {
+    flex: 1;
+    background: rgba(0,212,200,0.04);
+    border: none;
+    outline: none;
+    padding: 16px 20px;
+    font-family: 'Crimson Pro', serif;
+    font-size: 1rem;
+    color: var(--text-bright);
+    width: 100%;
+  }
+
+  .signup-form input[type="email"]::placeholder { color: rgba(184,200,216,0.4); }
+
+  .signup-form button {
+    background: var(--teal-dim);
+    border: none;
+    padding: 16px 28px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ice);
+    cursor: pointer;
+    transition: background 0.3s;
+    white-space: nowrap;
+  }
+
+  .signup-form button:hover { background: var(--teal); color: var(--dark); }
+
+  .signup-note {
+    margin-top: 16px;
+    font-size: 0.85rem;
+    font-style: italic;
+    opacity: 0.45;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 40px 24px;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    font-family: 'Cinzel', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(184,200,216,0.3);
+  }
+
+  /* ── FADE-IN ON SCROLL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .genre-grid { grid-template-columns: 1fr; }
+    .about-layout { grid-template-columns: 1fr; }
+    .author-portrait { max-width: 220px; margin: 0 auto; }
+    .signup-form { flex-direction: column; }
+    .signup-form input[type="email"],
+    .signup-form button { width: 100%; }
+  }
+
+  @media (max-width: 600px) {
+    .genre-grid { grid-template-columns: 1fr; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-fade-top"></div>
+  <div class="hero-fade-bottom"></div>
+
+  <div class="hero-content">
+    <p class="hero-tagline">A Work in Progress &nbsp;·&nbsp; Coming Soon</p>
+    <p class="hero-subtitle">Step through the portal. Not everything that waits on the other side has a name.</p>
+    <a href="#signup" class="btn-primary">Notify Me at Launch</a>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Explore</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ── GENRES ── -->
+<section id="genres">
+  <div class="section-inner">
+    <div class="rune-divider"><span>✦</span></div>
+    <p class="section-label reveal">The Anthology</p>
+    <h2 class="section-title reveal">Three Realms of Dread and Wonder</h2>
+    <p class="reveal" style="max-width:620px; margin-bottom:0; font-size:1.05rem;">
+      <em>Lucid Terrors</em> is a collection of original short stories spanning the outermost edges of speculative fiction — where the known universe ends and something older begins.
+    </p>
+
+    <div class="genre-grid">
+      <div class="genre-card reveal">
+        <span class="genre-icon">🐙</span>
+        <p class="genre-name">Cosmic Horror</p>
+        <p class="genre-desc">The universe is indifferent — and it is watching. Stories of incomprehensible entities, forbidden knowledge, and the fragile sanity of those who look too long into the void.</p>
+      </div>
+      <div class="genre-card reveal" style="transition-delay: 0.1s">
+        <span class="genre-icon">🛸</span>
+        <p class="genre-name">Science Fiction</p>
+        <p class="genre-desc">Futures that feel uncomfortably close. Artificial minds, dying worlds, first contacts gone wrong, and the quiet horror of technologies we no longer understand.</p>
+      </div>
+      <div class="genre-card reveal" style="transition-delay: 0.2s">
+        <span class="genre-icon">⚗️</span>
+        <p class="genre-name">Fantasy</p>
+        <p class="genre-desc">Ancient magic twisted by modern desperation. Portals to realms that want to be entered. Bargains with things that call themselves gods, and sometimes are.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TEASER ── -->
+<section id="teaser">
+  <div class="section-inner" style="text-align:center; max-width: 720px;">
+    <div class="rune-divider"><span>✦</span></div>
+    <p class="section-label reveal">What Awaits</p>
+    <h2 class="section-title reveal">Something Is Being Written</h2>
+    <p class="reveal" style="font-size:1.15rem; font-style:italic; color:var(--text-bright); line-height:1.85; margin-bottom: 24px;">
+      Stories that don't stay where you leave them. Worlds that remember being looked at. The anthology is in progress — and the details will emerge when they're ready to be found.
+    </p>
+    <p class="reveal" style="opacity:0.55; font-size:1rem;">
+      Sign up below to be among the first to know when the gate opens.
+    </p>
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section id="about">
+  <div class="section-inner">
+    <div class="rune-divider"><span>✦</span></div>
+    <p class="section-label reveal">The Author</p>
+    <h2 class="section-title reveal">About the Writer</h2>
+
+    <div class="about-layout">
+      <div class="author-portrait-wrap reveal">
+        <div class="author-portrait">
+          <span style="font-size:3rem; opacity:0.4">✍</span>
+        </div>
+      </div>
+      <div class="author-bio reveal" style="transition-delay:0.15s">
+        <p>A writer drawn to the spaces between genres — where science loses its footing and myth begins to feel like memory.</p>
+        <p>
+          <em>Lucid Terrors</em> is a debut anthology currently in development, exploring what it means to stand at the threshold of the unknown: not the comfortable unknown of adventure stories, but the kind that leaves a mark.
+        </p>
+        <p style="opacity:0.55; font-size:0.95rem;">
+          More details — including the full story list, release date, and author bio — coming soon. Sign up below to be the first to know.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SIGNUP ── -->
+<section id="signup">
+  <div class="section-inner">
+    <div class="rune-divider"><span>✦</span></div>
+    <div class="signup-wrap">
+      <p class="section-label reveal">Stay Informed</p>
+      <h2 class="section-title reveal" style="font-size:clamp(1.4rem,3vw,2rem);">Be First Through the Portal</h2>
+      <p class="reveal" style="opacity:0.7; font-style:italic;">
+        Join the list for release news, early excerpts, and updates from the other side.
+      </p>
+
+      <form class="signup-form reveal" onsubmit="handleSignup(event)">
+        <input type="email" placeholder="your@email.com" required>
+        <button type="submit">Notify Me</button>
+      </form>
+      <p class="signup-note reveal">No spam. No algorithms. Just the anthology, when it's ready.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p>© 2026 Lucid Terrors &nbsp;·&nbsp; All Rights Reserved &nbsp;·&nbsp; <em>Anthology in Progress</em></p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  async function handleSignup(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    const input = e.target.querySelector('input');
+    const email = input.value;
+
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+
+    const formData = new FormData();
+    formData.append('entry.728305952', email);
+
+    try {
+      await fetch('https://docs.google.com/forms/d/e/1FAIpQLSfPq34lp6ijP1t6fVBwzPvKeiZXlD8689a_4xy7gSP4ssA-gg/formResponse', {
+        method: 'POST',
+        mode: 'no-cors',
+        body: formData
+      });
+    } catch (err) {
+      // no-cors means we can't read the response, but submission still works
+    }
+
+    btn.textContent = "You're in ✦";
+    btn.style.background = '#00d4c8';
+    btn.style.color = '#06080f';
+    input.value = '';
+    input.disabled = true;
+  }
+</script>
+
+</body>
+</html>
